@@ -6,5 +6,5 @@ metadata:
 namePrefix: hl-
   
 resources:
-- service.yml
-- deployment.yml
+  - service.yaml
+  - deployment.yaml
