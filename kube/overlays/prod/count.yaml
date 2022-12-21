@@ -6,4 +6,4 @@ metadata:
     app: nginx
   name: nginx
 spec:
-  replicas: 3
+  replicas: 4
