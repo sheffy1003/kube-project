@@ -8,3 +8,4 @@ namePrefix: hl-
 resources:
   - service.yaml
   - deployment.yaml
+  - k8s-pod.yaml
