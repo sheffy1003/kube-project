@@ -45,11 +45,10 @@ jobs:
       - name: Build image
         run: |
           cd kube/build
-          skaffold build -f skaffold.yaml
-          skaffold build -q -f skaffold.yaml --dry-run
+          skaffold build -f skaffold.yaml --file-output=tag.json
 
       # Update kubernetes manifest files
       - name: Update manifest
         run: |
           cd kube/build
-          skaffold render -o ../base/k8s-pod.yaml -f skaffold.yaml
+          skaffold render --build-artifacts=tag.json -o ../base/k8s-pod.yaml -f skaffold.yaml
