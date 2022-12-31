@@ -44,10 +44,10 @@ jobs:
       # Build container image
       - name: Build image
         run: |
-          skaffold build
-          skaffold build -q --dry-run
+          skaffold build -f kube/build/skaffold.yaml
+          skaffold build -q -f kube/build/skaffold.yaml --dry-run
 
       # Update kubernetes manifest files
       - name: Update manifest
         run: |
-          skaffold render -o kube/base/k8s-pod.yaml
+          skaffold render -o kube/base/k8s-pod.yaml -f kube/build/skaffold.yaml
