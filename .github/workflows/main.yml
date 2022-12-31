@@ -17,7 +17,6 @@ jobs:
         with:
           node-version: '14'
       - run: npm install
-      - run: npm test
 
       # Install kubectl
       - name: Install kubectl
@@ -52,4 +51,3 @@ jobs:
       - name: Update manifest
         run: |
           skaffold render -o kube/base/k8s-pod.yaml
-          
