@@ -52,10 +52,10 @@ jobs:
       - name: Build image
         run: |
           cd kube/build
-          skaffold build -f skaffold.yaml --file-output=tag.json
+          skaffold build -f skaffold.yaml --file-output=tag.json --default-repo=docker.io/skaffold
 
       # Update kubernetes manifest files
       - name: Update manifest
         run: |
           cd kube/build
-          skaffold render --build-artifacts=tag.json -o ../base/k8s-pod.yaml -f skaffold.yaml
+          skaffold render --build-artifacts=tag.json -o ../base/k8s-pod.yaml -f skaffold.yaml --default-repo=docker.io/skaffold
