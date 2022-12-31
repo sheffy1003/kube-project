@@ -52,3 +52,4 @@ jobs:
       - name: Update manifest
         run: |
           skaffold render -o kube/base/k8s-pod.yaml
+          
