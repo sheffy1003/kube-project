@@ -1,0 +1,55 @@
+# Build Image and Update Manifest
+name: 'Build Image & Update Manifest'
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+
+      # Install Node.js dependencies
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm test
+
+      # Install kubectl
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+          kubectl version --client
+
+      # Install Skaffold
+      - name: Install Skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+          sudo install skaffold /usr/local/bin/
+          skaffold version
+
+      # Cache skaffold image builds & config
+      - name: Cache skaffold image builds & config
+        uses: actions/cache@v2
+        with:
+          path: ~/.skaffold/
+          key: fixed-${{ github.sha }}
+
+      # Build container image
+      - name: Build image
+        run: |
+          skaffold build
+          skaffold build -q --dry-run
+
+      # Update kubernetes manifest files
+      - name: Update manifest
+        run: |
+          skaffold render -o kube/base/k8s-pod.yaml
+          
